@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class ExcelImportService {
         this.supplierRepository = supplierRepository;
     }
 
+    @Transactional
     public ImportResultDto importProductsStock(MultipartFile file) {
         validateXlsxFile(file);
 
@@ -99,6 +101,7 @@ public class ExcelImportService {
         }
     }
 
+    @Transactional
     public ImportResultDto importProductsSales(MultipartFile file) {
         validateXlsxFile(file);
         ImportResultDto result = new ImportResultDto();
@@ -152,7 +155,6 @@ public class ExcelImportService {
             throw new IllegalArgumentException("Could not read .xlsx file", e);
         }
     }
-
 
 
     private void validateXlsxFile(MultipartFile file) {

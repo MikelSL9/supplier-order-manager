@@ -26,9 +26,9 @@ public class SupplierController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SupplierDto> findById(@PathVariable Long id) {
-        return supplierService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        SupplierDto supplier = supplierService.findById(id);
+        return ResponseEntity.ok(supplier);
+
     }
 
     @PostMapping
@@ -39,9 +39,8 @@ public class SupplierController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SupplierDto> update(@PathVariable Long id, @Valid @RequestBody SupplierDto supplierDto) {
-        return supplierService.update(id, supplierDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        SupplierDto updatedSupplier = supplierService.update(id, supplierDto);
+        return ResponseEntity.ok(updatedSupplier);
     }
 
     @DeleteMapping("/{id}")

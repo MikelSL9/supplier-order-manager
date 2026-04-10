@@ -1,18 +1,24 @@
 package com.mikelsl9.supplierordermanager.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Getter
-@Setter
-public class ProductDto {
-
-    private Long id;
-    private String barCode;
-    private String name;
-    private Integer currentStock;
-    private String supplierRef;
-    private Double dailySalesRate;
-    private Integer totalSales;
-    private Long supplierId;
-}
+public record ProductDto(
+    Long id,
+    @NotBlank(message = "Product barcode is required")
+    String barCode,
+    @NotBlank(message = "Product name is required")
+    String name,
+    @NotNull(message = "Current Stock is required")
+    @Min(value = 0, message = "Product currentStock must be 0 or greater")
+    Integer currentStock,
+    @NotBlank(message = "Supplier reference is required")
+    String supplierRef,
+    @Min(value = 0, message = "Daily sales rate cannot be negative")
+    Double dailySalesRate,
+    @Min(value = 0, message = "Total sales cannot be negative")
+    Integer totalSales,
+    @NotNull(message = "Supplier ID is required")
+    Long supplierId
+) {}

@@ -21,8 +21,10 @@ public class Supplier{
     private String email;
     @Column(name="phone_number",length=12)
     private String phoneNumber;
+    @Column(name="lead_time_days")
+    private Integer leadTimeDays;
 
-    public Supplier() {
+    protected Supplier() {
     }
 
     public Supplier(String name, String email, String phoneNumber) {

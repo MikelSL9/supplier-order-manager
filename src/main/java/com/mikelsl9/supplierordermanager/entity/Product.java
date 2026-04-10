@@ -35,6 +35,9 @@ public class Product {
     @Column(name = "total_sales")
     private Integer totalSales;
 
+    @Column(name = "safety_stock")
+    private Integer safetyStock;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
