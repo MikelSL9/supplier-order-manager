@@ -126,14 +126,14 @@ public class ExcelImportService {
 
                 if ((barCode == null || barCode.isBlank()) && (name == null || name.isBlank())) {
                     result.setSkippedRows(result.getSkippedRows() + 1);
-                    result.getUnreconciledRows().add("Row " + (rowIndex + 1) + ": missing barCode and name");
+                    result.getRowErrors().add("Row " + (rowIndex + 1) + ": missing barCode and name");
                     continue;
                 }
 
                 Product product = findProductForSalesRow(barCode, name, productsByNormalizedName);
                 if (product == null) {
                     result.setSkippedRows(result.getSkippedRows() + 1);
-                    result.getUnreconciledRows().add("Row " + (rowIndex + 1) + ": could not match product (barCode="
+                    result.getRowErrors().add("Row " + (rowIndex + 1) + ": could not match product (barCode="
                             + safeLabel(barCode) + ", name=" + safeLabel(name) + ")");
                     continue;
                 }

@@ -14,6 +14,6 @@ public class ImportResultDto {
     private int createdProducts;
     private int updatedProducts;
     private int skippedRows;
-    private List<String> unreconciledRows = new ArrayList<>();
+    private List<String> rowErrors = new ArrayList<>();
 
 }

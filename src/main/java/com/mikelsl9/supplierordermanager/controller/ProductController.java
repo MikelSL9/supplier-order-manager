@@ -1,7 +1,6 @@
 package com.mikelsl9.supplierordermanager.controller;
 
 import com.mikelsl9.supplierordermanager.dto.ProductDto;
-import com.mikelsl9.supplierordermanager.dto.SupplierDto;
 import com.mikelsl9.supplierordermanager.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
