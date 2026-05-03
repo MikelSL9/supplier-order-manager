@@ -1,6 +1,7 @@
 package com.mikelsl9.supplierordermanager.service;
 
-import com.mikelsl9.supplierordermanager.dto.ProductDto;
+import com.mikelsl9.supplierordermanager.dto.ProductRequest;
+import com.mikelsl9.supplierordermanager.dto.ProductResponse;
 import com.mikelsl9.supplierordermanager.entity.Product;
 import com.mikelsl9.supplierordermanager.entity.Supplier;
 import com.mikelsl9.supplierordermanager.mapper.ProductMapper;
@@ -9,12 +10,11 @@ import com.mikelsl9.supplierordermanager.repository.ProductRepository;
 import com.mikelsl9.supplierordermanager.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
 
-    private static final int DEFAULT_REORDER_COVERAGE_DAYS = 7;
+    //private static final int DEFAULT_REORDER_COVERAGE_DAYS = 7;
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
     private final ProductMapper productMapper;
@@ -25,40 +25,47 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductDto> findAll() {
-        return productRepository.findAll().stream()
-                .map(productMapper::toDto)
+    public List<ProductResponse> findAll() {
+        /*return productRepository.findAll().stream()
+                .map(productMapper::toResponse)
                 .toList();
+         */
+        List<Product> products = productRepository.findAll();
+        return productMapper.listEntityToResponse(products);
+
     }
 
-    public ProductDto findById(Long id) {
+    public ProductResponse findById(Long id) {
         Product product = productRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Product", id));
-        return productMapper.toDto(product);
+        return productMapper.toResponse(product);
     }
 
-    public ProductDto create(ProductDto productDto) {
-        Supplier supplier = supplierRepository.findById(productDto.supplierId()).orElseThrow(
-                () -> new ResourceNotFoundException("Supplier", productDto.supplierId()));
+    public ProductResponse create(ProductRequest productRequest) {
+        Supplier supplier = supplierRepository.findById(productRequest.supplierId()).orElseThrow(
+                () -> new ResourceNotFoundException("Supplier", productRequest.supplierId()));
 
-        Product product = productMapper.toEntity(productDto, supplier);
+        Product product = productMapper.toEntity(productRequest, supplier);
         Product savedProduct = productRepository.save(product);
-        return productMapper.toDto(savedProduct);
+        return productMapper.toResponse(savedProduct);
 
     }
 
-    public ProductDto update(Long id, ProductDto productDto) {
+    public ProductResponse update(Long id, ProductRequest productRequest) {
         Product existingProduct = productRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Product", id));
 
-        Supplier supplierDto = supplierRepository.findById(productDto.supplierId())
-                .orElseThrow(() -> new ResourceNotFoundException("Supplier", productDto.supplierId()));
+        Supplier supplier = supplierRepository.findById(productRequest.supplierId())
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier", productRequest.supplierId()));
 
-        productMapper.updateEntityFromDto(productDto, existingProduct, supplierDto);
+        existingProduct.setBarCode(productRequest.barCode());
+        existingProduct.setName(productRequest.name());
+        existingProduct.setCurrentStock(productRequest.currentStock());
+        existingProduct.setSupplierRef(productRequest.supplierRef());
+        existingProduct.setSupplier(supplier);
 
         Product updatedProduct = productRepository.save(existingProduct);
-
-        return productMapper.toDto(updatedProduct);
+        return productMapper.toResponse(updatedProduct);
     }
 
 
@@ -66,16 +73,17 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<ProductDto> findBySupplierId(Long supplierId) {
+    public List<ProductResponse> findBySupplierId(Long supplierId) {
+
         supplierRepository.findById(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier", supplierId));
-        return productRepository.findBySupplierId(supplierId).stream()
-                .map(productMapper::toDto)
-                .toList();
+
+        List<Product> products = productRepository.findBySupplierId(supplierId);
+        return productMapper.listEntityToResponse(products);
     }
 
 
-    public List<ProductDto> findReorderCandidates(Integer coverageDays) {
+    /*public List<ProductDto> findReorderCandidates(Integer coverageDays) {
         int days = coverageDays == null ? DEFAULT_REORDER_COVERAGE_DAYS : coverageDays;
         if (days < 1) {
             throw new IllegalArgumentException("coverageDays must be greater than 0");
@@ -100,7 +108,7 @@ public class ProductService {
 
         return currentStock < minimumRequiredStock;
 
-    }
+    }*/
 
 }
 

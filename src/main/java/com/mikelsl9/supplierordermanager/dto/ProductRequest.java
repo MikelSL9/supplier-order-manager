@@ -4,8 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record ProductDto(
-    Long id,
+public record ProductRequest(
     @NotBlank(message = "Product barcode is required")
     String barCode,
     @NotBlank(message = "Product name is required")
@@ -15,10 +14,6 @@ public record ProductDto(
     Integer currentStock,
     @NotBlank(message = "Supplier reference is required")
     String supplierRef,
-    @Min(value = 0, message = "Daily sales rate cannot be negative")
-    Double dailySalesRate,
-    @Min(value = 0, message = "Total sales cannot be negative")
-    Integer totalSales,
     @NotNull(message = "Supplier ID is required")
     Long supplierId
 ) {}

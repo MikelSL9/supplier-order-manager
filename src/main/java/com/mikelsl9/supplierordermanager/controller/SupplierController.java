@@ -1,6 +1,7 @@
 package com.mikelsl9.supplierordermanager.controller;
 
-import com.mikelsl9.supplierordermanager.dto.SupplierDto;
+import com.mikelsl9.supplierordermanager.dto.SupplierRequest;
+import com.mikelsl9.supplierordermanager.dto.SupplierResponse;
 import com.mikelsl9.supplierordermanager.service.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,26 +21,26 @@ public class SupplierController {
     }
 
     @GetMapping
-    public List<SupplierDto> findAll() {
+    public List<SupplierResponse> findAll() {
         return supplierService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SupplierDto> findById(@PathVariable Long id) {
-        SupplierDto supplier = supplierService.findById(id);
+    public ResponseEntity<SupplierResponse> findById(@PathVariable Long id) {
+        SupplierResponse supplier = supplierService.findById(id);
         return ResponseEntity.ok(supplier);
 
     }
 
     @PostMapping
-    public ResponseEntity<SupplierDto> create(@Valid @RequestBody SupplierDto supplierDto) {
+    public ResponseEntity<SupplierResponse> create(@Valid @RequestBody SupplierRequest supplierRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(supplierService.create(supplierDto));
+                .body(supplierService.create(supplierRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @Valid @RequestBody SupplierDto supplierDto) {
-        SupplierDto updatedSupplier = supplierService.update(id, supplierDto);
+    public ResponseEntity<SupplierResponse> update(@PathVariable Long id, @Valid @RequestBody SupplierRequest supplierRequest) {
+        SupplierResponse updatedSupplier = supplierService.update(id, supplierRequest);
         return ResponseEntity.ok(updatedSupplier);
     }
 

@@ -1,7 +1,7 @@
 package com.mikelsl9.supplierordermanager.controller;
 
-import com.mikelsl9.supplierordermanager.dto.ProductDto;
-import com.mikelsl9.supplierordermanager.dto.SupplierDto;
+import com.mikelsl9.supplierordermanager.dto.ProductRequest;
+import com.mikelsl9.supplierordermanager.dto.ProductResponse;
 import com.mikelsl9.supplierordermanager.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,25 +21,25 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
-       ProductDto product = productService.findById(id);
+    public ResponseEntity<ProductResponse> findById(@PathVariable Long id) {
+        ProductResponse product = productService.findById(id);
        return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> create(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest productRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.create(productDto));
+                .body(productService.create(productRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @Valid  @RequestBody ProductDto productDto) {
-        ProductDto updatedProduct = productService.update(id, productDto);
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid  @RequestBody ProductRequest productRequest) {
+        ProductResponse updatedProduct = productService.update(id, productRequest);
         return ResponseEntity.ok(updatedProduct);
     }
 
@@ -50,13 +50,13 @@ public class ProductController {
     }
 
     @GetMapping("/supplier/{id}")
-    public ResponseEntity<List<ProductDto>> findBySupplierId(@PathVariable Long id) {
+    public ResponseEntity<List<ProductResponse>> findBySupplierId(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findBySupplierId(id));
     }
 
 
-    @GetMapping("/reorder-candidates")
+    /*@GetMapping("/reorder-candidates")
     public ResponseEntity<List<ProductDto>> findReorderCandidates(@RequestParam(required = false) Integer coverageDays) {
         return ResponseEntity.ok(productService.findReorderCandidates(coverageDays));
-    }
+    }*/
 }

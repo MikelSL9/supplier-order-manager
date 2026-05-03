@@ -1,6 +1,7 @@
 package com.mikelsl9.supplierordermanager.service;
 
-import com.mikelsl9.supplierordermanager.dto.SupplierDto;
+import com.mikelsl9.supplierordermanager.dto.SupplierRequest;
+import com.mikelsl9.supplierordermanager.dto.SupplierResponse;
 import com.mikelsl9.supplierordermanager.entity.Supplier;
 import com.mikelsl9.supplierordermanager.exception.ResourceNotFoundException;
 import com.mikelsl9.supplierordermanager.mapper.SupplierMapper;
@@ -20,33 +21,42 @@ public class SupplierService {
         this.supplierMapper = supplierMapper;
     }
 
-    public List<SupplierDto> findAll() {
-        return supplierRepository.findAll().stream()
-                .map(supplierMapper::toDto)
-                .toList();
+    public List<SupplierResponse> findAll() {
+        List<Supplier> suppliers = supplierRepository.findAll();
+        return supplierMapper.listEntityToResponse(suppliers);
     }
 
-    public SupplierDto findById(Long id) {
+    /*public List<SupplierResponse> findAll() {
+        return supplierRepository.findAll().stream()
+                .map(supplierMapper::toResponse)
+                .toList();
+    }*/
+
+    public SupplierResponse findById(Long id) {
         Supplier supplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier",id));
-        return supplierMapper.toDto(supplier);
+        return supplierMapper.toResponse(supplier);
     }
 
-    public SupplierDto create(SupplierDto supplierDto) {
-        Supplier supplier = supplierMapper.toEntity(supplierDto);
+    public SupplierResponse create(SupplierRequest supplierRequest) {
+        Supplier supplier = supplierMapper.toEntity(supplierRequest);
         Supplier savedSupplier = supplierRepository.save(supplier);
 
-        return supplierMapper.toDto(savedSupplier);
+        return supplierMapper.toResponse(savedSupplier);
     }
 
-    public SupplierDto update(Long id, SupplierDto supplierDto) {
+    public SupplierResponse update(Long id, SupplierRequest supplierRequest) {
         Supplier existingSupplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier",id));
 
-        supplierMapper.updateEntityFromDto(supplierDto, existingSupplier);
+        existingSupplier.setName(supplierRequest.name());
+        existingSupplier.setEmail(supplierRequest.email());
+        existingSupplier.setPhoneNumber(supplierRequest.phoneNumber());
+        existingSupplier.setLeadTimeDays(supplierRequest.leadTimeDays());
+
         Supplier updatedSupplier = supplierRepository.save(existingSupplier);
 
-        return supplierMapper.toDto(updatedSupplier);
+        return supplierMapper.toResponse(updatedSupplier);
     }
 
     public void deleteById(Long id) {

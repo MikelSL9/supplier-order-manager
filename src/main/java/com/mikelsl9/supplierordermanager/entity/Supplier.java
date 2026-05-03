@@ -1,11 +1,14 @@
 package com.mikelsl9.supplierordermanager.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 @Table(name = "suppliers")
 
@@ -14,6 +17,7 @@ public class Supplier{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="supplier_id")
+    @Setter(AccessLevel.NONE)
     private Long id;
     @Column(length=120, nullable = false)
     private String name;
@@ -24,13 +28,10 @@ public class Supplier{
     @Column(name="lead_time_days")
     private Integer leadTimeDays;
 
-    protected Supplier() {
-    }
-
-    public Supplier(String name, String email, String phoneNumber) {
+    public Supplier(String name, String email, String phoneNumber, Integer leadTimeDays) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.leadTimeDays = leadTimeDays;
     }
-
 }

@@ -1,34 +1,18 @@
 package com.mikelsl9.supplierordermanager.mapper;
 
-import com.mikelsl9.supplierordermanager.dto.SupplierDto;
+import com.mikelsl9.supplierordermanager.dto.SupplierRequest;
+import com.mikelsl9.supplierordermanager.dto.SupplierResponse;
 import com.mikelsl9.supplierordermanager.entity.Supplier;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class SupplierMapper {
+import java.util.List;
 
-    public SupplierDto toDto(Supplier supplier) {
-        return new SupplierDto(
-                supplier.getId(),
-                supplier.getName(),
-                supplier.getEmail(),
-                supplier.getPhoneNumber(),
-                supplier.getLeadTimeDays()
-        );
-    }
+@Mapper(componentModel = "spring")
+public interface SupplierMapper {
 
-    public Supplier toEntity(SupplierDto supplierDto) {
-        return new Supplier(
-                supplierDto.name(),
-                supplierDto.email(),
-                supplierDto.phoneNumber()
-        );
-    }
+    SupplierResponse toResponse(Supplier supplier);
+    Supplier toEntity(SupplierRequest supplierRequest);
+    List<SupplierResponse> listEntityToResponse(List<Supplier> suppliers);
+    List<Supplier> listRequestToEntity(List<SupplierRequest> supplierRequests);
 
-    public void updateEntityFromDto(SupplierDto dto, Supplier supplier) {
-        supplier.setName(dto.name());
-        supplier.setEmail(dto.email());
-        supplier.setPhoneNumber(dto.phoneNumber());
-        supplier.setLeadTimeDays(dto.leadTimeDays());
-    }
 }
